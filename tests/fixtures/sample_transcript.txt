@@ -1,0 +1,6 @@
+[00:01:15] [Dr. Popescu] Bună ziua tuturor. Să începem ședința consiliului medical.
+[00:01:45] [Dr. Ionescu] Rezultatele la tomografie confirmă că pacientul are nevoie de PCI.
+[00:02:10] [Dr. Popescu] Dr. Ionescu, vă rog să pregătiți raportul pentru procedură până vineri.
+[00:02:30] [Dr. Ionescu] Confirm, voi pregăti raportul până vineri.
+[00:03:00] [Director Administrativ] Maybe we should review the supply budget next week, if someone has time.
+[00:03:15] [Dr. Popescu] Nu am aprobat asta încă. В реанимации нужно проверить оборудование.

@@ -1,0 +1,11 @@
+# Local SMTP capture only — nothing here calls the internet.
+# Run: docker compose up -d mailpit
+# Web UI to view captured emails: http://localhost:8025
+version: "3.8"
+services:
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - "1025:1025"   # SMTP port your app sends to
+      - "8025:8025"   # Web UI to read captured emails
+    restart: unless-stopped
