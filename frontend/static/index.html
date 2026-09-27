@@ -573,10 +573,10 @@
 
         <div class="field">
           <label class="head">Meeting Category</label>
-          <label class="radio checked"><input type="radio" name="category" value="Medical Board" checked>
+          <label class="radio checked"><input type="radio" name="category" value="Medical" checked>
             <div class="ritemicon" style="mask-image: url(stethoscope.svg)"></div>
             Medical</label>
-          <label class="radio"><input type="radio" name="category" value="Executive Board">
+          <label class="radio"><input type="radio" name="category" value="Executive">
             <div class="ritemicon" style="mask-image: url(user.svg)"></div>
             Executive</label>
           <label class="radio"><input type="radio" name="category" value="Administrative">
@@ -1142,7 +1142,7 @@
   }
 
   function markAllError() {
-    ['asr', 'llm', 'email'].forEach(function (k) {
+    ['TRANSCRIBING', 'EXTRACTING_DECISIONS', 'FORMATTING_MOM'].forEach(function (k) {
       var el = $(STEP_IDS[k]);
       if (!el.classList.contains('done')) {
         el.classList.remove('pending', 'running');

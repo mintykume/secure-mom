@@ -19,6 +19,7 @@ import express, { Request, Response } from 'express';
 import multer from 'multer';
 import path from 'path';
 import crypto from 'crypto';
+import * as http from "node:http";
 
 const PORT: number = Number(process.env.PORT) || 3000;
 const MAX_BYTES = 50 * 1024 * 1024; // 50 MB upload cap
@@ -283,45 +284,49 @@ app.get(['/api-docs', '/docs'], (_req: Request, res: Response) => {
   res.type('html').send(SWAGGER_HTML);
 });
 
+const dockerUrl = "http://localhost:8002";
+
+function proxyRequest(req: Request, res: Response, path: string) {
+  const targetUrl = new URL(`${dockerUrl}${path}`);
+
+  const proxyReq = http.request({
+    hostname: targetUrl.hostname,
+    path: targetUrl.pathname + targetUrl.search,
+    method: req.method,
+    headers: { ...req.headers, host: targetUrl.hostname },
+  }, (proxyRes) => {
+    res.writeHead(proxyRes.statusCode ?? 200, proxyRes.headers);
+    proxyRes.pipe(res, { end: true });
+  });
+
+  proxyReq.on('error', (err) => res.status(502).json({ error: err.message }));
+}
+
 // --- Submit a job ----------------------------------------------------------
 app.post('/api/pipeline', upload.single('audio'), (req: Request, res: Response) => {
   const file = req.file;
-  const rawCategory = (req.body?.category as string) || 'Medical Board';
-  const category: MeetingCategory = VALID_CATEGORIES.includes(rawCategory as MeetingCategory)
-    ? (rawCategory as MeetingCategory)
-    : 'Medical Board';
-  const targetInbox = (req.body?.targetInbox as string) || 'medical-board@medpark.local';
+  const rawCategory = (req.body?.category as string) || 'Medical';
 
-  // Validation — surface errors the frontend can display.
-  if (!file || !file.originalname) {
-    return res.status(422).json({ error: 'No audio file received. Please attach a recording.' });
-  }
-  if (file.size === 0) {
-    return res.status(422).json({ error: 'Audio file is empty.' });
+  const fd = new FormData();
+
+  if (!file) {
+    res.status(400);
+    return;
   }
 
-  const id = crypto.randomBytes(8).toString('hex');
-  const job: Job = {
-    id,
-    status: 'queued',
-    progress: 0,
-    category,
-    targetInbox,
-    fileName: file.originalname,
-    fileSize: file.size,
-    currentStage: null,
-    createdAt: Date.now(),
-    steps: STAGES.map((s) => ({ key: s.key, label: s.label, state: 'pending', elapsed: null })),
-    result: null,
-  };
-  jobs.set(id, job);
+  fd.set("meeting_type",rawCategory);
+  fd.set("file", new Blob([file.buffer as any], { type: file.mimetype }));
 
-  startPipeline(job);
-
-  return res.status(202).json({
-    "job_id": "0a3bec4f-8a76-444d-aeb7-9ab8232cf003",
-    "status": "QUEUED",
-    "message": "Înregistrare recepționată. Procesarea a început."
+  proxyRequest(req, res, "/api/v1/meetings")
+  fetch(`${dockerUrl}/api/v1/meetings`, {
+    method: "POST",
+    headers: { 'content-type': req.headers['content-type'] || 'application/json' },
+    body: fd,
+  }).then(result => {
+    res.status(result.status??200);
+    result.json().then(result => {
+      res.json(result);
+    }).catch(() => res.json({error: 1}));
   });
 });
 
@@ -331,13 +336,8 @@ app.get('/api/status/:id', (req: Request, res: Response) => {
   // if (!job) {
   //   return res.status(404).json({ error: 'Unknown job id.' });
   // }
-  return res.status(200).json({
-    "job_id": "0a3bec4f-8a76-444d-aeb7-9ab8232cf003",
-    "status": Math.random() < 0.1 ? "COMPLETED" : "EXTRACTING_DECISIONS",
-    "progress_percent": 100,
-    "elapsed_seconds": 841.77,
-    "message": "Raport finalizat cu succes."
-  });
+
+  proxyRequest(req, res, "/api/v1/meetings/"+req.params.id+"/status");
 });
 
 const results = [{
@@ -413,9 +413,8 @@ app.get('/api/result/:id', (req: Request, res: Response) => {
   // if (!job) {
   //   return res.status(404).json({ error: 'Unknown job id.' });
   // }
-  return res.status(200).json(results[
-    0
-    ]);
+
+  proxyRequest(req, res, "/api/v1/meetings/"+req.params.id+"/result");
 });
 
 
