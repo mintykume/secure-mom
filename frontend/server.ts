@@ -318,24 +318,106 @@ app.post('/api/pipeline', upload.single('audio'), (req: Request, res: Response) 
 
   startPipeline(job);
 
-  return res.status(202).json({ id, status: job.status });
+  return res.status(202).json({
+    "job_id": "0a3bec4f-8a76-444d-aeb7-9ab8232cf003",
+    "status": "QUEUED",
+    "message": "Înregistrare recepționată. Procesarea a început."
+  });
 });
 
 // --- Poll job status -------------------------------------------------------
 app.get('/api/status/:id', (req: Request, res: Response) => {
-  const job = jobs.get(req.params.id);
-  if (!job) {
-    return res.status(404).json({ error: 'Unknown job id.' });
-  }
+  // const job = jobs.get(req.params.id);
+  // if (!job) {
+  //   return res.status(404).json({ error: 'Unknown job id.' });
+  // }
   return res.status(200).json({
-    id: job.id,
-    status: job.status,
-    progress: job.progress,
-    currentStage: job.currentStage,
-    steps: job.steps.map(({ startedAt, ...rest }) => rest), // hide internal timestamp
-    result: job.status === 'done' ? job.result : null,
+    "job_id": "0a3bec4f-8a76-444d-aeb7-9ab8232cf003",
+    "status": Math.random() < 0.1 ? "COMPLETED" : "EXTRACTING_DECISIONS",
+    "progress_percent": 100,
+    "elapsed_seconds": 841.77,
+    "message": "Raport finalizat cu succes."
   });
 });
+
+const results = [{
+  "job_id": "0a3bec4f-8a76-444d-aeb7-9ab8232cf003",
+  "status": "COMPLETED",
+  "meeting_type": "Medical",
+  "filename": "Medpark_audio.m4a",
+  "total_processing_sec": 243,
+  "transcript_preview": " ție acolo suspekție și ruptura de cordașul post, care nu prea putea confirmată.  Cărdeacul de suspecție este ruptura de cortașul post, care nu prea poate confirmată, i-a luat statul unui conundat al postului.  Deci, pe opție, transferat cu dozele mici de noradrimonină și vineri.  A fost descartat î...",
+  "distribution_list": [
+    "consiliu.medical@medpark.local",
+    "sef.chirurgie@medpark.local",
+    "ati.board@medpark.local",
+    "v.cebotari@medpark.local"
+  ],
+  "summary": "Rezumat general al vizitei la pat",
+  "patients": [
+    {
+      "patient_id": 1,
+      "patient_summary": "Pacientul este în stare generală lucidă. Valorile de laborator indică creatinina 240 și ureea 19. Pentru monitorizare a fost montată o linie arterială. Pacientul continuă tratamentul cu noradrenalină.",
+      "patient_decision": "Se decide continuarea infuziilor cu noradrenalină, continuarea umplerii vasculare și monitorizarea în continuare a pacientului."
+    },
+    {
+      "patient_id": 2,
+      "patient_summary": "Pacientul este afebril, prezentând insuficiență respiratorie. Oxigenarea este de 90%, iar pacientul este hipercapnic, cu valoarea CO₂ de 69. În prezent urmează tratament cu Forxiga și Diacarb.",
+      "patient_decision": "S-a decis efectuarea unui consult cardiologic și a unui consult terapeut. De asemenea, s-a decis utilizarea ventilației non-invazive BiPAP."
+    },
+    {
+      "patient_id": 3,
+      "patient_summary": "Pacientul prezintă ruptura de cordașul post, care nu poate fi confirmată. A fost tratat cu doze mici de noradrenalină și vineri. Pacientul a fost descărat de studii activi. La scanare se observă lichid în plămâni. Pacientul urmează tratament cu meropenem și amikacină.",
+      "patient_decision": "S-au decis transfuzii de sânge în contextul anemiei. Se recomandă consult oncologic și consult urologic pentru luarea unei decizii privind stentarea."
+    }
+  ],
+  "title": null,
+  "discussion_points": null
+}, {
+  "job_id": "c325ddd8-7434-4b2f-9414-3aa9c5eab954",
+  "status": "COMPLETED",
+  "meeting_type": "Executive",
+  "filename": "output_20_s.m4a",
+  "total_processing_sec": 164.15,
+  "transcript_preview": " Îi înseamnă în acoperița de săptămâni care anumitea o suferiță de programă pe care o arătăm săfarii făcării în spatele din spatele de oameni.",
+  "distribution_list": [
+    "board.executiv@medpark.local",
+    "director.general@medpark.local",
+    "cfo@medpark.local"
+  ],
+  "summary": null,
+  "patients": null,
+  "title": "Ședință Comitet Director: Revizuire Buget Q3 și Plan Investiții",
+  "discussion_points": [
+    {
+      "point": "Analiza execuției bugetare pentru secția de Chirurgie Cardiovasculară și achiziția noului angiograf. Directorul Financiar a raportat o depășire cu 12% a cheltuielilor pe consumabile chirurgicale, compensată de creșterea veniturilor cu 18% datorită gradului de ocupare de 92%.",
+      "decisions": [
+        "Se aprobă plafonul de Capex în valoare de 450.000 EUR pentru inițierea licitației noului angiograf.",
+        "Directorul Financiar va prezenta până la 15 octombrie analiza de amortizare pe 5 ani.",
+        "Se solicită șefului de secție revizuirea protocoalelor de consum pentru kiturile de stentare."
+      ]
+    },
+    {
+      "point": "Pregătirea auditului extern pentru re-acreditarea calității și conformității clinice. Directorul Medical a subliniat necesitatea armonizării procedurilor interne (SOP-uri) între secția ATI și Blocul Operator până la finalul lunii curente.",
+      "decisions": [
+        "Se constituie comisia internă de audit compusă din Directorul Medical și Responsabilul Calitate.",
+        "Termenul de predare a documentației revizuite este stabilit pentru 30 octombrie."
+      ]
+    }
+  ]
+}];
+
+// --- Poll job status -------------------------------------------------------
+app.get('/api/result/:id', (req: Request, res: Response) => {
+  // const job = jobs.get(req.params.id);
+  // if (!job) {
+  //   return res.status(404).json({ error: 'Unknown job id.' });
+  // }
+  return res.status(200).json(results[
+    0
+    ]);
+});
+
 
 // --- Error handler (e.g. multer file-size limit) ---------------------------
 app.use((err: unknown, _req: Request, res: Response, _next: express.NextFunction) => {

@@ -232,7 +232,6 @@
   .tabs {
     display: flex;
     gap: 0;
-    border: 1px solid var(--border);
     border-radius: 8px;
     overflow: hidden;
     margin-bottom: 16px;
@@ -242,50 +241,92 @@
     padding: 9px 18px;
     font-size: 13px;
     cursor: pointer;
-    color: var(--muted);
-    background: #0d1830;
-    border-right: 1px solid var(--border);
+    color: #27272B80;
+    font-size: 20px;
+    line-height: 32px;
+    padding: 12px;
+    position: relative;
   }
-  .tab:last-child { border-right: none; }
-  .tab.active { color: #06110d; background: var(--accent); font-weight: 700; }
+  .tab::after {
+    position: absolute;
+    height: 1px;
+    background-color: #27272B1A;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    content: '';
+  }
+  .tab.active::after {
+    background-color: #27272B1A; height: 3px }
 
   .section-title {
-    font-size: 12px;
+    font-size: 24px;
+    line-height: 34px;
     letter-spacing: 2px;
-    color: var(--blue);
-    margin: 18px 0 8px;
+    color: #27272B;
+    margin: 28px 0 20px;
     text-transform: uppercase;
-    border-bottom: 1px solid var(--border);
     padding-bottom: 6px;
   }
   .section-title:first-child { margin-top: 0; }
 
-  .prose { color: var(--text); line-height: 1.6; }
+  .prose {
+    background-color: #3585F80D;
+    border: 1px solid #3585F8;
+    border-radius: 8px;
+    padding: 21px 12px;
+    color: #27272B;
+    font-size: 20px;
+    line-height: 20px;
+    margin-bottom: 28px;
+  }
+  ul.clean > li {
+    margin-bottom: 20px;
+  }
   ul.clean { list-style: none; padding-left: 0; margin: 0; }
-  ul.clean li { padding: 4px 0 4px 20px; position: relative; }
-  ul.clean li::before {
-    content: '▸'; color: var(--accent); position: absolute; left: 2px;
+  ul.clean li {
+    padding: 4px 0 0px 0px;
+    position: relative;
+    color: #27272B;
+    font-size: 16px;
+    line-height: 22px;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  ul.clean li:last-child {
+    margin-bottom: 0;
   }
 
   table.items {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 6px;
-    font-size: 13px;
+    font-size: 16px;
+    border-radius: 14px;
+    background-color: #EFF3FA;
+    margin-bottom: 28px;
   }
   table.items th, table.items td {
     text-align: left;
-    padding: 9px 10px;
-    border: 1px solid var(--border);
+    padding: 16px 4px;
+    color: #27272B;
   }
   table.items th {
-    background: #0d1830;
-    color: var(--muted);
-    letter-spacing: 1px;
-    font-size: 11px;
-    text-transform: uppercase;
+    color: #27272B;
+    font-size: 20px;
+    line-height: 24px;
   }
-  table.items tr:nth-child(even) td { background: rgba(255,255,255,0.015); }
+  table.items tr {
+    border-bottom: 1px solid #00000014;
+  }
+  table.items tr:last-child {
+    border-bottom: none;
+  }
+  table.items td:first-child, table.items th:first-child {
+    padding-left: 26px;
+  }
+  table.items td:last-child, table.items th:last-child {
+    padding-right: 26px;
+  }
 
   .placeholder {
     color: var(--muted);
@@ -449,6 +490,51 @@
   #elapsed {
     color: #27272B;
   }
+  .success {
+    padding: 24px 11px;
+    background-color: #E6FAEF;
+    margin-top: 26px;
+  }
+  .success > img:first-child {
+    margin-right: 12px;
+  }
+  .success-head {
+    font-size: 20px;
+    line-height: 28px;
+    margin-bottom: 4px;
+    font-weight: 400;
+    color: #2F9801;
+  }
+  .success-subhead {
+    color: #2F9801;
+    font-size: 14px;
+    line-height: 18px;
+    opacity: 0.5;
+  }
+  .success button {
+    color: #2F9801;
+    border: 1px solid #2F9801;
+    background: transparent;
+    padding: 6px 12px;
+    border-radius: 10px;
+  }
+  .high, .medium {
+    font-size: 15px;
+    line-height: 20px;
+    padding: 6px 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    border-radius: 16px;
+    width: fit-content;
+  }
+  .high {
+    background-color: #FFCECE;
+    color: #D42525;
+  }
+  .medium {
+    background-color: #FFF0CE;
+    color: #F08C0A;
+  }
   .row {
     display: flex;
     flex-direction: row;
@@ -532,7 +618,7 @@
 
       <!-- RIGHT: preview -->
       <div class="col right">
-        <div id="tab-empty" class="column hidden">
+        <div id="tab-empty" class="column">
           <img src="empty.png" alt="empty"/>
           <div class="row">
             Upload an audio file or load a preset<br>
@@ -540,7 +626,7 @@
           </div>
         </div>
 
-        <div id="tab-loading">
+        <div id="tab-loading" class="hidden">
           <h3>Secure AI Pipeline</h3>
           <h4>Running on local GPU Real-time processing</h4>
           <div class="steps">
@@ -552,7 +638,7 @@
                 <div class="step-description processing">Normalizing audio...</div>
                 <div class="step-description wainting">Ready to send request</div>
               </div>
-              <span class="time">Pending</span>
+<!--              <span class="time">Pending</span>-->
             </div>
             <div class="step pending row" id="step-llm">
               <span class="mark"></span>
@@ -562,18 +648,18 @@
                 <div class="step-description processing">Processing audio to text...</div>
                 <div class="step-description wainting">Waiting for audio normalization...</div>
               </div>
-              <span class="time">Pending</span>
+<!--              <span class="time">Pending</span>-->
             </div>
-            <div class="step pending row" id="step-mining">
-              <span class="mark"></span>
-              <div class="column">
-                <div class="step-title">Decision Mining & Action Extraction <span style="color: #27272B80">(Local 7B LLM)</span></div>
-                <div class="step-description ready">Actions are ready</div>
-                <div class="step-description processing">Preparing actions...</div>
-                <div class="step-description wainting">Waiting for transcription...</div>
-              </div>
-              <span class="time">Pending</span>
-            </div>
+<!--            <div class="step pending row" id="step-mining">-->
+<!--              <span class="mark"></span>-->
+<!--              <div class="column">-->
+<!--                <div class="step-title">Decision Mining & Action Extraction <span style="color: #27272B80">(Local 7B LLM)</span></div>-->
+<!--                <div class="step-description ready">Actions are ready</div>-->
+<!--                <div class="step-description processing">Preparing actions...</div>-->
+<!--                <div class="step-description wainting">Waiting for transcription...</div>-->
+<!--              </div>-->
+<!--              <span class="time">Pending</span>-->
+<!--            </div>-->
             <div class="step pending row" id="step-email">
               <span class="mark"></span>
               <div class="column">
@@ -582,7 +668,7 @@
                 <div class="step-description processing">Sending emails...</div>
                 <div class="step-description wainting">Waiting for analysis...</div>
               </div>
-              <span class="time">Pending</span>
+<!--              <span class="time">Pending</span>-->
             </div>
             <div class="row">
               <img src="watch.svg"/>
@@ -597,35 +683,73 @@
 
 
         <div id="result-header" class="hidden">
-          <h2 class="col-title">Minutes of Meeting Preview</h2>
-
           <div class="tabs">
-            <div class="tab active" data-tab="mom">★ MoM Document</div>
+            <div class="tab active" data-tab="mom">MoM Document</div>
             <div class="tab" data-tab="transcript">Multilingual Transcript</div>
+            <div class="tab" data-tab="raw">Raw JSON</div>
           </div>
+
+          <h2 class="col-title">Minutes of Meeting: Medical Board Case #4092</h2>
         </div>
 
         <!-- MoM tab -->
         <div id="tab-mom" class="hidden">
-          <div id="momPlaceholder" class="placeholder">
-            No minutes generated yet.<br>
-            Attach an audio file and run the secure pipeline to extract the MoM.
-          </div>
+          <div id="momContent" class="">
+            <div id="summary-block">
+              <div class="section-title">Summary</div>
+              <div id="summary" class="prose">
+                Discussed patient case #4092. Approved emergency cardiac intervention and post-op ICU protocols
+              </div>
+            </div>
 
-          <div id="momContent" class="hidden">
-            <div class="section-title">Summary</div>
-            <div id="summary" class="prose"></div>
+            <div id="decisions-block">
+              <div class="section-title">Key Decisions</div>
+              <ul id="decisions" class="clean">
+                <li>Proceed with TAVI procedure on Tuesday morning</li>
+                <li>Allocate extra dosage reserves in ICU</li>
+              </ul>
+            </div>
 
-            <div class="section-title">Decisions Made</div>
-            <ul id="decisions" class="clean"></ul>
+            <div id="actions-blocks">
+              <div class="section-title">Action Items</div>
+              <table class="items">
+                <thead>
+                <tr><th>ID</th><th>Summary</th><th>Decision</th></tr>
+                </thead>
+                <tbody id="actionItems">
+                <tr>
+                  <td>Prepare pre-op CT scans</td>
+                  <td>Dr. Popescu</td>
+                  <td>2026-09-28</td>
+                </tr>
+                <tr>
+                  <td>Order cardiovascular catheter kit</td>
+                  <td>Head Nurse Elena</td>
+                  <td>2026-09-30</td>
+                </tr>
+                <tr>
+                  <td>Finalize surgical kit</td>
+                  <td>Dr. Cojocaru</td>
+                  <td>2026-09-27</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
 
-            <div class="section-title">Action Items</div>
-            <table class="items">
-              <thead>
-                <tr><th>Action</th><th>Owner</th><th>Deadline</th></tr>
-              </thead>
-              <tbody id="actionItems"></tbody>
-            </table>
+            <div class="success row">
+              <img src="success.svg" alt="success"/>
+              <div class="column flex1">
+                <div class="success-head">
+                  Document Succesfully Delivered!
+                </div>
+                <div class="success-subhead">
+                  Minutes of Meeting sent to medical-board@medpark.local via local SMTP.
+                </div>
+              </div>
+              <a href="http://localhost:8025" target="_blank">
+                <button>Open Mailpit Inbox (Port 8025) ↗</button>
+              </a>
+            </div>
           </div>
         </div >
 
@@ -668,7 +792,15 @@
   var errorBanner = $('errorBanner');
   var progressFill = $('progressFill');
 
-  var STEP_IDS = { asr: 'step-asr', llm: 'step-llm', email: 'step-email' };
+  /*
+  * QUEUED = "QUEUED"
+    TRANSCRIBING = "TRANSCRIBING"
+    EXTRACTING_DECISIONS = "EXTRACTING_DECISIONS"
+    FORMATTING_MOM = "FORMATTING_MOM"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+    * */
+  var STEP_IDS = { TRANSCRIBING: 'step-asr', EXTRACTING_DECISIONS: 'step-llm', FORMATTING_MOM: 'step-email' };
   var STEP_MARKS = { asr: '1', llm: '2', email: '3' };
 
   // ---- Category radios highlight -----------------------------------------
@@ -817,6 +949,8 @@
   function trackJob(id) {
     if (state.polling) clearInterval(state.polling);
 
+    $("tab-empty").classList.add("hidden");
+    $("tab-loading").classList.remove("hidden");
     const startTime = Date.now();
     const updateElapsed = setInterval(() => {
       $("elapsed").innerText = formatAudioLength(Math.round((Date.now()-startTime)/1000));
@@ -829,13 +963,20 @@
         .then(function (r) {
           if (!r.ok || r.data.error) throw new Error(r.data.error || 'Lost track of the job.');
           applyStatus(r.data);
-          if (r.data.status === 'done') {
+          if (r.data.status === 'COMPLETED') {
             clearInterval(state.polling);
             clearInterval(updateElapsed);
             state.polling = null;
             setRunning(false);
-            renderResult(r.data.result);
-          } else if (r.data.status === 'error') {
+            fetch(API_BASE + '/api/result/' + id).then(function (res) {
+              return res.json().then(function (data) { return { ok: res.ok, data: data }; });
+            }).then(function (r) {
+              $("tab-loading").classList.add("hidden");
+              $("tab-mom").classList.remove("hidden");
+              $("result-header").classList.remove("hidden");
+              renderResult(r.data);
+            })
+          } else if (r.data.status === 'FAILED') {
             clearInterval(state.polling);
             state.polling = null;
             setRunning(false);
@@ -861,13 +1002,47 @@
     if (typeof data.progress === 'number') {
       progressFill.style.width = data.progress + '%';
     }
-    (data.steps || []).forEach(function (s) {
-      var el = $(STEP_IDS[s.key]);
-      if (!el) return;
+    function setStatus(id, state) {
+      const el = $(id);
       el.classList.remove('pending', 'running', 'done', 'error');
-      el.classList.add(s.state);
-      if (s.elapsed) el.querySelector('.time').textContent = formatAudioLength(parseFloat(s.elapsed));
-    });
+      el.classList.add(state);
+    }
+    /*
+    QUEUED = "QUEUED"
+    TRANSCRIBING = "TRANSCRIBING"
+    EXTRACTING_DECISIONS = "EXTRACTING_DECISIONS"
+    FORMATTING_MOM = "FORMATTING_MOM"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+    * */
+    // 'step-asr',  'step-llm',  'step-email'
+    switch(data.status) {
+      case 'TRANSCRIBING':
+        setStatus("step-asr", "running");
+        setStatus("step-llm", "pending");
+        setStatus("step-email", "pending");
+        break;
+
+      case 'EXTRACTING_DECISIONS':
+        setStatus("step-asr", "done");
+        setStatus("step-llm", "running");
+        setStatus("step-email", "pending");
+        break;
+
+      case 'FORMATTING_MOM':
+        setStatus("step-asr", "done");
+        setStatus("step-llm", "done");
+        setStatus("step-email", "running");
+        break;
+
+    }
+    // (data.steps || []).forEach(function (s) {
+    //   var el = $(STEP_IDS[s.key]);
+    //   if (!el) return;
+    //   el.classList.remove('pending', 'running', 'done', 'error');
+    //   el.classList.add(s.state);
+    //   if (s.elapsed) el.querySelector('.time').textContent = formatAudioLength(parseFloat(s.elapsed));
+    // });
   }
 
   function labelFor(key) {
@@ -878,27 +1053,56 @@
   function renderResult(result) {
     if (!result) return;
 
-    $('summary').textContent = result.summary || '';
+    if (result.summary) {
+      $('summary').textContent = result.summary;
+      $('summary-block').classList.remove("hidden");
+    }
+    else {
+      $("summary-block").classList.add("hidden");
+    }
 
     var dl = $('decisions');
     dl.innerHTML = '';
-    (result.decisions || []).forEach(function (d) {
-      var li = document.createElement('li');
-      li.textContent = d;
-      dl.appendChild(li);
-    });
+    if(result.discussion_points) {
+      (result.discussion_points).forEach(function (d) {
+        var li = document.createElement('li');
+        var title = document.createElement('div');
+        var body = document.createElement('ul');
+        title.className = "discussion-title";
+        title.innerText = d.point;
+        body.className = "discussion-body";
+
+        li.append(title);
+        d.decisions.forEach(item => {
+          const el = document.createElement("li");
+          el.innerText = item;
+          body.append(el);
+        });
+        li.append(body);
+        dl.appendChild(li);
+      });
+      $("decisions-block").classList.remove("hidden");
+    }
+    else {
+      $("decisions-block").classList.add("hidden");
+    }
 
     var tb = $('actionItems');
     tb.innerHTML = '';
-    (result.actionItems || []).forEach(function (a) {
-      var tr = document.createElement('tr');
-      tr.appendChild(cell(a.action));
-      tr.appendChild(cell(a.owner));
-      tr.appendChild(cell(a.deadline));
-      tb.appendChild(tr);
-    });
+    if(result.patients) {
+      (result.patients).forEach(function (a) {
+        var tr = document.createElement('tr');
+        tr.appendChild(cell(a.patient_id));
+        tr.appendChild(cell(a.patient_summary));
+        tr.appendChild(cell(a.patient_decision));
+        tb.appendChild(tr);
+      });
+      $("actions-blocks").classList.remove("hidden");
+    }
+    else {
+      $("actions-blocks").classList.add("hidden");
+    }
 
-    $('momPlaceholder').classList.add('hidden');
     $('momContent').classList.remove('hidden');
 
     // Transcript
@@ -929,7 +1133,8 @@
   // ---- Status helpers -----------------------------------------------------
   function resetStatus() {
     progressFill.style.width = '0%';
-    ['asr', 'llm', 'email'].forEach(function (k) {
+    // 'step-asr', EXTRACTING_DECISIONS: 'step-llm', FORMATTING_MOM: 'step-email'
+    ['TRANSCRIBING', 'EXTRACTING_DECISIONS', 'FORMATTING_MOM'].forEach(function (k) {
       var el = $(STEP_IDS[k]);
       el.classList.remove('running', 'done', 'error');
       el.classList.add('pending');
